@@ -1,6 +1,7 @@
 package fr.mateusfrz.specmode;
 
 import fr.mateusfrz.specmode.commands.Spec;
+import fr.mateusfrz.specmode.metrics.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -24,6 +25,8 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
+
+        Metrics metrics = new Metrics(this, 6953);
 
         if (!getDataFolder().exists()) getDataFolder().mkdir();
 
