@@ -8,6 +8,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.io.*;
 import java.util.*;
@@ -65,7 +68,7 @@ public class Main extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec(playerOldLocation, this));
 
-        Bukkit.getScheduler().runTaskTimer(this, new SpecTask(playerOldLocation, this), 0L, 20L);
+        Bukkit.getScheduler().runTaskTimer(this, new SpecTask(playerOldLocation, this), 0L, 5L);
     }
 
     @Override

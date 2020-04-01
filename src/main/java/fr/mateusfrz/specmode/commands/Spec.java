@@ -56,7 +56,6 @@ public class Spec implements CommandExecutor {
                     playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
 
                     player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-                    Bukkit.getOnlinePlayers().forEach(players -> players.showPlayer(plugin, player));
 
                     return true;
 
@@ -65,9 +64,8 @@ public class Spec implements CommandExecutor {
 
                     playerOldLocation.put(player.getUniqueId(), player.getLocation());
                     player.setGameMode(GameMode.SPECTATOR);
-                    Bukkit.getOnlinePlayers().forEach(players -> players.hidePlayer(plugin, player));
 
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 99999, 1, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 99999, 0, false, false));
 
                     return true;
 

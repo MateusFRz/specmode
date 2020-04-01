@@ -43,17 +43,16 @@ public class Cube {
         return "max:" + x_max + " - min:" + x_min + "   |   min:" + z_max + " - max:" + z_min;
     }
 
+
     public void draw(Player player) {
         for (double i = x_min; i < x_max; i++) {
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), i, player.getLocation().getY(), z_max), 1);
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), i, player.getLocation().getY(), z_min), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), i, player.getLocation().getY() + 1, z_max), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), i, player.getLocation().getY() + 1, z_min), 1);
         }
 
         for (double y = z_min; y < z_max; y++) {
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_min, player.getLocation().getY(), y), 1);
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_max, player.getLocation().getY(), y), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_min, player.getLocation().getY() + 1, y), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_max, player.getLocation().getY() + 1, y), 1);
         }
     }
-
-
 }
