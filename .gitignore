@@ -1,6 +1,8 @@
 # IntelliJ
-.idea
+.idea/
 test/
+out/
+target/
 
 # Compiled class file
 *.class
