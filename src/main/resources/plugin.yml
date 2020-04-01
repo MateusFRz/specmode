@@ -1,6 +1,6 @@
 main: fr.mateusfrz.specmode.Main
 author: MateusFRz
-version: '5.0'
+version: '5.1'
 name: Specmode
 commands:
   spec:
