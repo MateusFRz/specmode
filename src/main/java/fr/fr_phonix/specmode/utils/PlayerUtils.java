@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerUtils {
 
     private static Inventory GUI;
-    public static final String GUI_TITLE = ChatColor.BOLD + "" + ChatColor.GREEN + "Specmode options";
+    public static final String GUI_TITLE = ChatColor.RED + "" + ChatColor.BOLD + "Specmode options";
 
     @NotNull
     public static boolean isOnline(Player player) {

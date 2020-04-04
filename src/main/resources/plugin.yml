@@ -1,12 +1,12 @@
 main: fr.fr_phonix.specmode.Main
 author: MateusFRz
-version: '6.3'
+version: '6.3.2'
 name: Specmode
 commands:
   spec:
     description: Allow you to have access to specmode
     aliases: [specmode, spectator]
-    usage: §6§l[SPECMODE] §cPlease do /specmode <cube> [size]
+    usage: §6§l[SPECMODE] §cPlease do /specmode <cube/option> [size]
     permission-message: §6§l[SPECMODE] §cYou cannot do this !
     permission: specmode.use
 
@@ -14,6 +14,9 @@ permissions:
   specmode.cube:
     description: Allow player to set cube size
     default: op
+  specmode.option:
+    description: Show player option
+    default: true
   specmode.bypass:
     description: Allow player to bypass cooldown
     default: op

@@ -34,11 +34,8 @@ public class NPCManager {
     }
 
     public void attachToNPC(Player player) {
-        NPC tmp = null;
+        NPC tmp = npcList.getOrDefault(player.getUniqueId(), null);
         observers.add(player.getUniqueId());
-        if (npcList.containsKey(player.getUniqueId())) {
-            tmp = npcList.get(player.getUniqueId());
-        }
 
         for (NPC npc : npcList.values()) {
             if (!npc.equals(tmp))

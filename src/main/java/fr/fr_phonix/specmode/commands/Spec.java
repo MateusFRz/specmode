@@ -1,16 +1,13 @@
 package fr.fr_phonix.specmode.commands;
 
-import fr.fr_phonix.specmode.npc.NPC;
 import fr.fr_phonix.specmode.npc.NPCManager;
 import fr.fr_phonix.specmode.utils.PlayerUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -45,13 +42,14 @@ public class Spec implements CommandExecutor {
                         plugin.getConfig().set("cube.size", size);
                         plugin.saveConfig();
 
-                        player.sendMessage("§6§l[SPECMODE] §aCube size is now §6" + size);
+                        player.sendMessage("§6§l[SpecMode] §aCube size is now §6" + size);
                         return true;
                     } catch (NumberFormatException e) {
-                        player.sendMessage("§6§l[SPECMODE] This not a number !");
+                        player.sendMessage("§6[SpecMode] This not a number !");
                         return false;
                     }
-                } if (args[0].equalsIgnoreCase("option") && (player.hasPermission("specmode.option"))) {
+                }
+                if (args[0].equalsIgnoreCase("option") && (player.hasPermission("specmode.option"))) {
                     PlayerUtils.openGUI(player, npcManager.isObserver(player));
                     return true;
                 }
@@ -81,18 +79,12 @@ public class Spec implements CommandExecutor {
                     return true;
 
                 } else {
-                    Location loc = player.getLocation();
-
-                    player.sendMessage("§c§oAn error occur please report to you're administrator !");
-
-                    playerOldLocation.remove(player.getUniqueId());
-                    player.setGameMode(GameMode.SURVIVAL);
-                    player.teleport(new Location(player.getWorld(), loc.getX(), loc.getWorld().getHighestBlockYAt(loc), loc.getZ()));
+                    player.sendMessage("§6[SpecMode] §cYou must be in SURVIVAL to access spectator mode !");
                     return true;
                 }
             } else {
                 long time = (playerCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000;
-                player.sendMessage("§cPlease wait " + time + " second before use it again");
+                player.sendMessage("§6[SpecMode] §cPlease wait " + time + " second before use it again");
                 return true;
             }
         }
