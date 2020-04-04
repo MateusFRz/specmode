@@ -1,7 +1,10 @@
-package fr.mateusfrz.specmode;
+package fr.fr_phonix.specmode;
 
-import fr.mateusfrz.specmode.commands.Spec;
-import fr.mateusfrz.specmode.metrics.Metrics;
+import fr.fr_phonix.specmode.commands.Spec;
+import fr.fr_phonix.specmode.listeners.GUIListener;
+import fr.fr_phonix.specmode.listeners.ListernerManager;
+import fr.fr_phonix.specmode.metrics.Metrics;
+import fr.fr_phonix.specmode.npc.NPCManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,11 +12,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -25,8 +26,9 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-
         Metrics metrics = new Metrics(this, 6953);
+        NPCManager npcManager = new NPCManager(this);
+        ListernerManager listernerManager = new ListernerManager(this, npcManager);
 
         if (!getDataFolder().exists()) getDataFolder().mkdir();
 
@@ -65,11 +67,10 @@ public class Main extends JavaPlugin {
         }
 
 
-
         Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aPlayers locations loaded");
 
-
-        Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec(playerOldLocation, this));
+        Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec(playerOldLocation, this, npcManager));
+        listernerManager.registerEvents();
 
         Bukkit.getScheduler().runTaskTimer(this, new SpecTask(playerOldLocation, this), 0L, 5L);
     }
@@ -81,7 +82,6 @@ public class Main extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aSaving player location");
 
         fileConfiguration.set("players", null);
-
 
 
         if (!fileConfiguration.isConfigurationSection("players")) {

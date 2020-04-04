@@ -1,5 +1,8 @@
-package fr.mateusfrz.specmode.commands;
+package fr.fr_phonix.specmode.commands;
 
+import fr.fr_phonix.specmode.npc.NPC;
+import fr.fr_phonix.specmode.npc.NPCManager;
+import fr.fr_phonix.specmode.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -7,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -19,11 +23,13 @@ public class Spec implements CommandExecutor {
     private HashMap<UUID, Location> playerOldLocation;
     private HashMap<UUID, Long> playerCooldown = new HashMap<>();
     private Plugin plugin;
+    private NPCManager npcManager;
 
 
-    public Spec(HashMap<UUID, Location> playerOldLocation, Plugin plugin) {
+    public Spec(HashMap<UUID, Location> playerOldLocation, Plugin plugin, NPCManager npcManager) {
         this.playerOldLocation = playerOldLocation;
         this.plugin = plugin;
+        this.npcManager = npcManager;
     }
 
 
@@ -45,6 +51,9 @@ public class Spec implements CommandExecutor {
                         player.sendMessage("§6§l[SPECMODE] This not a number !");
                         return false;
                     }
+                } if (args[0].equalsIgnoreCase("option") && (player.hasPermission("specmode.option"))) {
+                    PlayerUtils.openGUI(player, npcManager.isObserver(player));
+                    return true;
                 }
             } else if (player.hasPermission("specmode.bypass") || !playerCooldown.containsKey(player.getUniqueId()) || playerCooldown.get(player.getUniqueId()) <= System.currentTimeMillis()) {
                 if (player.getGameMode().equals(GameMode.SPECTATOR) && playerOldLocation.containsKey(player.getUniqueId())) {
@@ -56,16 +65,18 @@ public class Spec implements CommandExecutor {
                     playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
 
                     player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+                    npcManager.removeNPC(player);
 
                     return true;
 
                 } else if (player.getGameMode().equals(GameMode.SURVIVAL)) {
                     // Switch player from survival to spec and register his location
 
-                    playerOldLocation.put(player.getUniqueId(), player.getLocation());
                     player.setGameMode(GameMode.SPECTATOR);
+                    playerOldLocation.put(player.getUniqueId(), player.getLocation());
 
                     player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 99999, 0, false, false));
+                    npcManager.createNPC(player);
 
                     return true;
 
@@ -80,7 +91,7 @@ public class Spec implements CommandExecutor {
                     return true;
                 }
             } else {
-                long time = (playerCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) /1000;
+                long time = (playerCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000;
                 player.sendMessage("§cPlease wait " + time + " second before use it again");
                 return true;
             }

@@ -1,4 +1,4 @@
-package fr.mateusfrz.specmode.metrics;
+package fr.fr_phonix.specmode.metrics;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

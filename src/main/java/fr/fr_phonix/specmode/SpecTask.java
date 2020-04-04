@@ -1,8 +1,8 @@
-package fr.mateusfrz.specmode;
+package fr.fr_phonix.specmode;
 
 
-import fr.mateusfrz.specmode.utils.Cube;
-import fr.mateusfrz.specmode.utils.PlayerUtils;
+import fr.fr_phonix.specmode.utils.Cube;
+import fr.fr_phonix.specmode.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

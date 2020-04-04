@@ -1,4 +1,4 @@
-package fr.mateusfrz.specmode.utils;
+package fr.fr_phonix.specmode.utils;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
