@@ -11,11 +11,14 @@ public class Cube {
     private final double x_min;
     private final double z_min;
 
+    private final double size;
+
     public Cube(double x, double z, double size) {
         x_max = x + size;
         z_max = z + size;
         x_min = x - size;
         z_min = z - size;
+        this.size = size;
     }
 
     public Cube(Location location, double size) {
@@ -45,14 +48,12 @@ public class Cube {
 
 
     public void draw(Player player) {
-        for (double i = x_min; i < x_max; i++) {
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), i, player.getLocation().getY() + 1, z_max), 1);
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), i, player.getLocation().getY() + 1, z_min), 1);
+        for (double i = 0; i < (2*size); i++) {
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_min + i, player.getLocation().getY() + 1, z_max), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_min + i, player.getLocation().getY() + 1, z_min), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_min, player.getLocation().getY() + 1, z_min + i), 1);
+            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_max, player.getLocation().getY() + 1, z_min + i), 1);
         }
 
-        for (double y = z_min; y < z_max; y++) {
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_min, player.getLocation().getY() + 1, y), 1);
-            player.spawnParticle(Particle.BARRIER, new Location(player.getWorld(), x_max, player.getLocation().getY() + 1, y), 1);
-        }
     }
 }
