@@ -22,12 +22,13 @@ public class Main extends JavaPlugin {
 
     private HashMap<UUID, Location> playerOldLocation = new HashMap<>();
     private File file;
+    private NPCManager npcManager;
 
     @Override
     public void onEnable() {
 
         Metrics metrics = new Metrics(this, 6953);
-        NPCManager npcManager = new NPCManager(this);
+        npcManager = new NPCManager(this);
         ListernerManager listernerManager = new ListernerManager(this, npcManager);
 
         if (!getDataFolder().exists()) getDataFolder().mkdir();
@@ -72,7 +73,7 @@ public class Main extends JavaPlugin {
         Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec(playerOldLocation, this, npcManager));
         listernerManager.registerEvents();
 
-        Bukkit.getScheduler().runTaskTimer(this, new SpecTask(playerOldLocation, this), 0L, 5L);
+        Bukkit.getScheduler().runTaskTimer(this, new SpecTask(playerOldLocation, this, npcManager), 0L, 5L);
     }
 
     @Override
@@ -110,6 +111,7 @@ public class Main extends JavaPlugin {
         }
 
         Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aPlayer location saved");
+        npcManager.detachAll();
 
     }
 }

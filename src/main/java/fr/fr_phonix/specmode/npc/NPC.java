@@ -44,7 +44,7 @@ public class NPC {
 
     public void attach(Player player) {
         observer.add(player.getUniqueId());
-        teleport();
+        teleport(player.getLocation());
     }
 
     public void detach(Player player) {
@@ -57,8 +57,9 @@ public class NPC {
             destroy(Bukkit.getPlayer(uuid));
     }
 
-    public void teleport() {
+    public void teleport(Location location) {
         try {
+            setLocation(location);
             entityPlayer.getClass().getMethod("setLocation", double.class, double.class, double.class, float.class, float.class)
                     .invoke(entityPlayer, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 

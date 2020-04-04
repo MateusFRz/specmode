@@ -1,6 +1,6 @@
 main: fr.fr_phonix.specmode.Main
 author: MateusFRz
-version: '6.3.2'
+version: '6.3.4'
 name: Specmode
 commands:
   spec:

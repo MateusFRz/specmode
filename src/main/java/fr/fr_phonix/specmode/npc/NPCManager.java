@@ -17,14 +17,15 @@ public class NPCManager {
             for (Map.Entry<UUID, NPC> entry : entrySet) {
                 entry.getValue().setLocation(Bukkit.getPlayer(entry.getKey()).getLocation());
             }
-        }, 1L, 1L);
+        }, 1L, 0L);
     }
 
     public void createNPC(Player player) {
         NPC npc = new NPC(player.getLocation(), player.getName());
         npcList.put(player.getUniqueId(), npc);
         for (UUID uuid : observers) {
-            npc.attach(Bukkit.getPlayer(uuid));
+            if (!uuid.equals(player.getUniqueId()))
+                npc.attach(Bukkit.getPlayer(uuid));
         }
     }
 
@@ -48,6 +49,17 @@ public class NPCManager {
         for (NPC npc : npcList.values()) {
             npc.detach(player);
         }
+    }
+
+    public void detachAll() { // Exception occur -> Concurrent list access
+        Iterator<UUID> iterator = observers.iterator();
+        while (iterator.hasNext()) {
+            detachToNPC(Bukkit.getPlayer(iterator.next()));
+        }
+    }
+
+    public NPC getNPC(Player player) {
+        return npcList.get(player.getUniqueId());
     }
 
     public boolean hasNPC(Player player) {

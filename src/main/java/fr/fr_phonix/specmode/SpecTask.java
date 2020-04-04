@@ -1,6 +1,7 @@
 package fr.fr_phonix.specmode;
 
 
+import fr.fr_phonix.specmode.npc.NPCManager;
 import fr.fr_phonix.specmode.utils.Cube;
 import fr.fr_phonix.specmode.utils.PlayerUtils;
 import org.bukkit.Bukkit;
@@ -18,10 +19,12 @@ class SpecTask implements Runnable {
 
     private HashMap<UUID, Location> playerOldLocation;
     private Plugin plugin;
+    private NPCManager npcManager;
 
-    SpecTask(HashMap<UUID, Location> playerOldLocation, Plugin plugin) {
+    SpecTask(HashMap<UUID, Location> playerOldLocation, Plugin plugin, NPCManager npcManager) {
         this.playerOldLocation = playerOldLocation;
         this.plugin = plugin;
+        this.npcManager = npcManager;
     }
 
     @Override
@@ -37,6 +40,7 @@ class SpecTask implements Runnable {
                     cube.draw(player);
                     if (!PlayerUtils.isInTheCube(location, cube) && player.getGameMode().equals(GameMode.SPECTATOR)) {
                         player.teleport(playerOldLocation.get(uuids));
+                        npcManager.getNPC(player).teleport(player.getLocation());
                         player.sendMessage("§6§l[SPECMODE] §cYou can't escape too far !");
                     }
                 }
