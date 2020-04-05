@@ -63,7 +63,7 @@ public class Spec implements CommandExecutor {
                     playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
 
                     player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-                    npcManager.removeNPC(player);
+                    if (npcManager.hasNPC(player)) npcManager.removeNPC(player);
 
                     return true;
 

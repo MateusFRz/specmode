@@ -9,7 +9,7 @@ import java.util.*;
 public class NPCManager {
 
     private Map<UUID, NPC> npcList = new HashMap<>();
-    private List<UUID> observers = new ArrayList<>();
+    private ArrayList<UUID> observers = new ArrayList<>();
 
     public NPCManager(Plugin plugin) {
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
@@ -51,10 +51,10 @@ public class NPCManager {
         }
     }
 
-    public void detachAll() { // Exception occur -> Concurrent list access
-        Iterator<UUID> iterator = observers.iterator();
-        while (iterator.hasNext()) {
-            detachToNPC(Bukkit.getPlayer(iterator.next()));
+    public void detachAll() {
+        ArrayList<UUID> uuids = (ArrayList<UUID>) observers.clone();
+        for (UUID uuid : uuids) {
+            detachToNPC(Bukkit.getPlayer(uuid));
         }
     }
 

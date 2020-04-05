@@ -1,7 +1,8 @@
 main: fr.fr_phonix.specmode.Main
 author: MateusFRz
-version: '6.3.4'
+version: '6.3.7'
 name: Specmode
+prefix: 'Specmode'
 commands:
   spec:
     description: Allow you to have access to specmode

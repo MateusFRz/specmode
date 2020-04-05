@@ -16,6 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Main extends JavaPlugin {
@@ -44,7 +46,7 @@ public class Main extends JavaPlugin {
             }
         } else {
 
-            Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aGetting players of players.dat...");
+            Bukkit.getLogger().log(Level.INFO,getName() + " §aGetting players of players.dat...");
 
             //PLAYER.DAT LOADING
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
@@ -68,7 +70,7 @@ public class Main extends JavaPlugin {
         }
 
 
-        Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aPlayers locations loaded");
+        Bukkit.getLogger().log(Level.INFO,getName() + " §aPlayers locations loaded");
 
         Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec(playerOldLocation, this, npcManager));
         listernerManager.registerEvents();
@@ -80,7 +82,7 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
 
-        Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aSaving player location");
+        Bukkit.getLogger().log(Level.INFO,getName() + " Saving player location");
 
         fileConfiguration.set("players", null);
 
@@ -110,7 +112,7 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
 
-        Bukkit.getConsoleSender().sendMessage("§6§l[SPECMODE] §aPlayer location saved");
+        Bukkit.getLogger().log(Level.INFO, getName() + " §aPlayer location saved");
         npcManager.detachAll();
 
     }

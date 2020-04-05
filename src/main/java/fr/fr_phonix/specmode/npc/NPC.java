@@ -44,7 +44,7 @@ public class NPC {
 
     public void attach(Player player) {
         observer.add(player.getUniqueId());
-        teleport(player.getLocation());
+        teleport(location);
     }
 
     public void detach(Player player) {
