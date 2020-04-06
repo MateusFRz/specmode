@@ -69,4 +69,8 @@ public class NPCManager {
     public boolean isObserver(Player player) {
         return observers.contains(player.getUniqueId());
     }
+
+    public List<UUID> getObservers() {
+        return observers;
+    }
 }

@@ -8,10 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 public class PlayerUtils {
 
     private static Inventory GUI;
     public static final String GUI_TITLE = ChatColor.RED + "" + ChatColor.BOLD + "Specmode options";
+    public static HashMap<UUID, Location> playerOldLocation = new HashMap<>();
 
     @NotNull
     public static boolean isOnline(Player player) {
@@ -38,34 +42,34 @@ public class PlayerUtils {
 
     private static void createInventory() {
         GUI = Bukkit.createInventory(null, 27, GUI_TITLE);
-        GUI.setItem(0, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(1, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(2, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(3, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(4, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(5, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(6, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(7, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(8, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(9, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(10, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(0, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(1, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(2, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(3, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(4, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(5, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(6, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(7, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(8, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(9, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(10, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
 
         GUI.setItem(12, ItemUtils.item(ChatColor.RED + "Not yet", Material.BARRIER, 1));
         GUI.setItem(13, ItemUtils.item(ChatColor.RED + "Not yet", Material.BARRIER, 1));
         GUI.setItem(14, ItemUtils.item(ChatColor.RED + "Not yet", Material.BARRIER, 1));
         GUI.setItem(15, ItemUtils.item(ChatColor.RED + "Not yet", Material.BARRIER, 1));
 
-        GUI.setItem(16, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(17, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(18, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(19, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(20, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(21, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(22, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(23, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(24, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(25, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
-        GUI.setItem(26, ItemUtils.item("", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(16, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(17, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(18, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(19, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(20, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(21, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(22, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(23, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(24, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(25, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
+        GUI.setItem(26, ItemUtils.item(" ", Material.GRAY_STAINED_GLASS_PANE, 1));
 
     }
 }

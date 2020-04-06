@@ -2,6 +2,7 @@ package fr.fr_phonix.specmode.commands;
 
 import fr.fr_phonix.specmode.npc.NPCManager;
 import fr.fr_phonix.specmode.utils.PlayerUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -17,14 +18,12 @@ import java.util.UUID;
 
 public class Spec implements CommandExecutor {
 
-    private HashMap<UUID, Location> playerOldLocation;
     private HashMap<UUID, Long> playerCooldown = new HashMap<>();
     private Plugin plugin;
     private NPCManager npcManager;
 
 
-    public Spec(HashMap<UUID, Location> playerOldLocation, Plugin plugin, NPCManager npcManager) {
-        this.playerOldLocation = playerOldLocation;
+    public Spec(Plugin plugin, NPCManager npcManager) {
         this.plugin = plugin;
         this.npcManager = npcManager;
     }
@@ -53,13 +52,24 @@ public class Spec implements CommandExecutor {
                     PlayerUtils.openGUI(player, npcManager.isObserver(player));
                     return true;
                 }
+                return false;
             } else if (player.hasPermission("specmode.bypass") || !playerCooldown.containsKey(player.getUniqueId()) || playerCooldown.get(player.getUniqueId()) <= System.currentTimeMillis()) {
-                if (player.getGameMode().equals(GameMode.SPECTATOR) && playerOldLocation.containsKey(player.getUniqueId())) {
+                if (player.getGameMode().equals(GameMode.SPECTATOR)) {
+                    if (!PlayerUtils.playerOldLocation.containsKey(player.getUniqueId())) {
+                        player.sendMessage("§6[SpecMode] Error, you are going to be teleport to the highest block at you're location");
+
+                        player.teleport(player.getLocation().getWorld().getHighestBlockAt(player.getLocation()).getLocation());
+                        player.setGameMode(GameMode.SURVIVAL);
+                        playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
+
+                        if (npcManager.hasNPC(player)) npcManager.removeNPC(player);
+                        return true;
+                    }
                     //Switch player from spec to survival and remove OldLocation
 
-                    player.teleport(playerOldLocation.get(player.getUniqueId()));
+                    player.teleport(PlayerUtils.playerOldLocation.get(player.getUniqueId()));
                     player.setGameMode(GameMode.SURVIVAL);
-                    playerOldLocation.remove(player.getUniqueId());
+                    PlayerUtils.playerOldLocation.remove(player.getUniqueId());
                     playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
 
                     player.removePotionEffect(PotionEffectType.NIGHT_VISION);
@@ -71,7 +81,7 @@ public class Spec implements CommandExecutor {
                     // Switch player from survival to spec and register his location
 
                     player.setGameMode(GameMode.SPECTATOR);
-                    playerOldLocation.put(player.getUniqueId(), player.getLocation());
+                    PlayerUtils.playerOldLocation.put(player.getUniqueId(), player.getLocation());
 
                     player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 99999, 0, false, false));
                     npcManager.createNPC(player);

@@ -22,7 +22,7 @@ public class GUIListener implements Listener {
             Player player = (Player) event.getWhoClicked();
             event.setCancelled(true);
 
-            if (event.getCurrentItem().hasItemMeta()) {
+            if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta()) {
                if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.GREEN + "Show spectators")) {
                    npcManager.attachToNPC(player);
                    event.getWhoClicked().sendMessage("§6[SpecMode] §aSpectator are now visible");
