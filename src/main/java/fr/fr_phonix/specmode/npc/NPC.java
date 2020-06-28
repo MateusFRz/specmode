@@ -1,7 +1,9 @@
 package fr.fr_phonix.specmode.npc;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -16,20 +18,24 @@ public class NPC {
     private Location location;
     private Location oldLocation;
     private String name;
+    private String texture;
+    private String signature;
     private GameProfile gameProfile;
     private Object entityPlayer;
-    /*private String texture;
-    private String signature;*/
+    private UUID uuid;
     private int entityId;
 
     private List<UUID> observer = new ArrayList<>();
 
-    public NPC(Location location, String name) {//, String texture, String signature) {
+    public NPC(Location location, String name, String texture, String signature) {
         this.oldLocation = location;
         this.location = location;
-        this.name = name;
-        /*this.texture = null;
-        this.signature = null;*/
+        this.name = ChatColor.GRAY + "[S] " +  name;
+        this.uuid = UUID.randomUUID();
+        this.texture = texture;
+        this.signature = signature;
+
+        this.name = this.name.substring(0, 15);
 
         spawn();
     }
@@ -42,14 +48,14 @@ public class NPC {
     }
 
 
-    public void attach(Player player) {
-        observer.add(player.getUniqueId());
+    public void attach(UUID player) {
+        observer.add(player);
         teleport(location);
     }
 
-    public void detach(Player player) {
-        observer.remove(player.getUniqueId());
-        destroy(player);
+    public void detach(UUID player) {
+        observer.remove(player);
+        destroy(Bukkit.getPlayer(player));
     }
 
     public void detachAll() {
@@ -74,8 +80,9 @@ public class NPC {
             Object minecraftServer = getCraftBukkitClass("CraftServer").getMethod("getServer").invoke(Bukkit.getServer());
             Object worldServer = getCraftBukkitClass("CraftWorld").getMethod("getHandle").invoke(location.getWorld());
 
-            gameProfile = new GameProfile(UUID.randomUUID(), name);
-            //gameProfile.getProperties().put("textures", new Property("textures", texture, signature));
+            gameProfile = new GameProfile(uuid, name);
+            gameProfile.getProperties().put("textures", new Property("textures", texture, signature));
+
 
             Constructor<?> entityPlayerConstructor = getNMSClass("EntityPlayer").getDeclaredConstructors()[0];
             Constructor<?> playerInteractManagerConstructor = getNMSClass("PlayerInteractManager").getDeclaredConstructors()[0];
@@ -139,12 +146,6 @@ public class NPC {
             Object packetPlayOutNamedEntitySpawn = packetPlayOutNamedEntitySpawnConstructor.newInstance(entityPlayer);
             sendPacket(packetPlayOutNamedEntitySpawn);
 
-            // PacketPlayOutPlayerInfo - Remove
-            Object removePlayerEnum = getNMSClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction").getField("REMOVE_PLAYER").get(null);
-
-            Object packetPlayerOutPlayerInfoRemove = packetPlayOutPlayerInfoConstructor.newInstance(removePlayerEnum, array);
-            sendPacket(packetPlayerOutPlayerInfoRemove);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,6 +153,16 @@ public class NPC {
 
     private void destroy(Player player) {
         try {
+            // PacketPlayOutPlayerInfo - Remove
+            Constructor<?> packetPlayOutPlayerInfoConstructor = getNMSClass("PacketPlayOutPlayerInfo").getConstructor(getNMSClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction"), Class.forName("[Lnet.minecraft.server." + getVersion() + ".EntityPlayer;"));
+            Object removePlayerEnum = getNMSClass("PacketPlayOutPlayerInfo$EnumPlayerInfoAction").getField("REMOVE_PLAYER").get(null);
+
+            Object array = Array.newInstance(getNMSClass("EntityPlayer"), 1);
+            Array.set(array, 0, entityPlayer);
+
+            Object packetPlayerOutPlayerInfoRemove = packetPlayOutPlayerInfoConstructor.newInstance(removePlayerEnum, array);
+            sendPacket(packetPlayerOutPlayerInfoRemove);
+
             int[] id = {entityId};
             Constructor<?> packetPlayOutEntityDestroyConstructor = getNMSClass("PacketPlayOutEntityDestroy").getConstructor(int[].class);
             Object packetPlayOutEntityDestroy = packetPlayOutEntityDestroyConstructor.newInstance(id);
@@ -165,7 +176,10 @@ public class NPC {
     private void sendPacket(Object packet) {
         try {
             for (UUID uuid : observer) {
-                Object handle = Bukkit.getPlayer(uuid).getClass().getMethod("getHandle").invoke(Bukkit.getPlayer(uuid));
+                Player observer = Bukkit.getPlayer(uuid);
+                if (observer == null || !observer.isOnline()) continue;
+
+                Object handle = observer.getClass().getMethod("getHandle").invoke(Bukkit.getPlayer(uuid));
                 Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
 
                 playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
@@ -177,6 +191,8 @@ public class NPC {
 
     private void sendPacket(Player player, Object packet) {
         try {
+            if (player == null) return;
+
             Object handle = player.getClass().getMethod("getHandle").invoke(player);
             Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
 
@@ -208,5 +224,13 @@ public class NPC {
     private String getVersion() {
         // net.minecraft.server.v1_15_1_R1
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    }
+
+    public UUID getUUID() {
+        return uuid;
+    }
+
+    public String getName() {
+        return name;
     }
 }

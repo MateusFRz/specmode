@@ -48,6 +48,23 @@ public class Spec implements CommandExecutor {
                         return false;
                     }
                 }
+                if (args.length > 1 && args[0].equalsIgnoreCase("tp")  && (player.hasPermission("specmode.teleport") || player.isOp())) {
+                    if (npcManager.hasNPC(player)) {
+                        Player teleportPlayer = Bukkit.getPlayer(args[1]);
+                        if (teleportPlayer != null && player.isOnline()) {
+                            player.teleport(teleportPlayer);
+                            player.setGameMode(GameMode.SPECTATOR);
+
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 99999, 0, false, false));
+                            npcManager.removeNPC(player.getUniqueId());
+                            npcManager.createNPC(player);
+
+                            return true;
+                        }
+                    } else {
+                        player.sendMessage("§6[SpecMode] You have to be in spectator's mode to teleport to a player");
+                    }
+                }
                 if (args[0].equalsIgnoreCase("option") && (player.hasPermission("specmode.option"))) {
                     PlayerUtils.openGUI(player, npcManager.isObserver(player));
                     return true;
@@ -62,18 +79,19 @@ public class Spec implements CommandExecutor {
                         player.setGameMode(GameMode.SURVIVAL);
                         playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
 
-                        if (npcManager.hasNPC(player)) npcManager.removeNPC(player);
+                        if (npcManager.hasNPC(player)) npcManager.removeNPC(player.getUniqueId());
                         return true;
                     }
                     //Switch player from spec to survival and remove OldLocation
 
                     player.teleport(PlayerUtils.playerOldLocation.get(player.getUniqueId()));
                     player.setGameMode(GameMode.SURVIVAL);
+
                     PlayerUtils.playerOldLocation.remove(player.getUniqueId());
                     playerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.getConfig().getInt("cooldown") * 1000));
 
                     player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-                    if (npcManager.hasNPC(player)) npcManager.removeNPC(player);
+                    if (npcManager.hasNPC(player)) npcManager.removeNPC(player.getUniqueId());
 
                     return true;
 

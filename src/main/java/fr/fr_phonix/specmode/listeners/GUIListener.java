@@ -24,11 +24,11 @@ public class GUIListener implements Listener {
 
             if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta()) {
                if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.GREEN + "Show spectators")) {
-                   npcManager.attachToNPC(player);
+                   npcManager.attach(player.getUniqueId());
                    event.getWhoClicked().sendMessage("§6[SpecMode] §aSpectator are now visible");
 
                 } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Hide spectators")) {
-                   npcManager.detachToNPC(player);
+                   npcManager.detach(player.getUniqueId());
                    event.getWhoClicked().sendMessage("§6[SpecMode] §cSpectator are now hide");
                 }
             }

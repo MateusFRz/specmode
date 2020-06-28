@@ -19,6 +19,6 @@ public class ListernerManager {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         pluginManager.registerEvents(new GUIListener(npcManager), plugin);
-        pluginManager.registerEvents(new PlayerListener(npcManager), plugin);
+        pluginManager.registerEvents(new PlayerListener(plugin, npcManager), plugin);
     }
 }

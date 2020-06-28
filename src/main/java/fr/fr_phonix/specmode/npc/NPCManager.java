@@ -1,6 +1,8 @@
 package fr.fr_phonix.specmode.npc;
 
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -10,8 +12,11 @@ public class NPCManager {
 
     private Map<UUID, NPC> npcList = new HashMap<>();
     private ArrayList<UUID> observers = new ArrayList<>();
+    private Plugin plugin;
 
     public NPCManager(Plugin plugin) {
+        this.plugin = plugin;
+
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             Set<Map.Entry<UUID, NPC>> entrySet = npcList.entrySet();
             for (Map.Entry<UUID, NPC> entry : entrySet) {
@@ -21,40 +26,56 @@ public class NPCManager {
     }
 
     public void createNPC(Player player) {
-        NPC npc = new NPC(player.getLocation(), player.getName());
+        Property property = ((CraftPlayer) player).getProfile().getProperties().get("textures").iterator().next();
+        NPC npc = new NPC(player.getLocation(), player.getName(), property.getValue(), property.getSignature());
         npcList.put(player.getUniqueId(), npc);
         for (UUID uuid : observers) {
-            if (!uuid.equals(player.getUniqueId()))
-                npc.attach(Bukkit.getPlayer(uuid));
+            if (!uuid.equals(player.getUniqueId())) {
+                npc.attach(uuid);
+                if (Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(uuid).isOnline())
+                    Bukkit.getPlayer(uuid).hidePlayer(plugin, player);
+
+            }
         }
     }
 
-    public void removeNPC(Player player) {
-        npcList.get(player.getUniqueId()).detachAll();
-        npcList.remove(player.getUniqueId());
+    public void removeNPC(UUID player) {
+        npcList.get(player).detachAll();
+        npcList.remove(player);
+        observers.forEach(observer -> {
+            if (Bukkit.getPlayer(observer) != null && Bukkit.getPlayer(observer).isOnline())
+                Bukkit.getPlayer(observer).showPlayer(plugin, Bukkit.getPlayer(player));
+        });
     }
 
-    public void attachToNPC(Player player) {
-        NPC tmp = npcList.getOrDefault(player.getUniqueId(), null);
-        observers.add(player.getUniqueId());
+    public void attach(UUID player) {
+        observers.add(player);
+        showAllNPCToPlayer(player);
+    }
 
+    public void detach(UUID player) {
+        observers.remove(player);
+        hideAllNPCToPlayer(player);
+    }
+
+    public void detachAll() {
+        ArrayList<UUID> uuids = (ArrayList<UUID>) observers.clone();
+        for (UUID uuid : uuids) {
+            detach(uuid);
+        }
+    }
+
+    public void showAllNPCToPlayer(UUID player) {
+        NPC tmp = npcList.getOrDefault(player, null);
         for (NPC npc : npcList.values()) {
             if (!npc.equals(tmp))
                 npc.attach(player);
         }
     }
 
-    public void detachToNPC(Player player) {
-        observers.remove(player.getUniqueId());
+    public void hideAllNPCToPlayer(UUID player) {
         for (NPC npc : npcList.values()) {
             npc.detach(player);
-        }
-    }
-
-    public void detachAll() {
-        ArrayList<UUID> uuids = (ArrayList<UUID>) observers.clone();
-        for (UUID uuid : uuids) {
-            detachToNPC(Bukkit.getPlayer(uuid));
         }
     }
 
